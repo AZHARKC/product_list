@@ -1,16 +1,39 @@
-# product_list
+# Product List App
 
-A new Flutter project.
+A Flutter application showcasing:
 
-## Getting Started
+- Clean architecture using BLoC and Freezed
+- Local data caching with SQLite (`sqflite`)
+- API pagination using `limit` and `skip`
+- Deep linking with Firebase Dynamic Links
+- Reactive UI with local DB listening
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+##  Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 📄 Product List Page
+- Fetches product data from:  
+  `https://dummyjson.com/products?limit=10&skip=0`
+- Uses `flutter_bloc` and `freezed` for state management
+- Caches data locally in **SQLite**
+- Displays data using `StreamBuilder`
+- Supports **lazy loading** with pagination
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 🔍 Product Detail Page
+- Opens on product tap or deep link
+- Reads product from local SQLite DB
+- Shows: `Product not found in local storage` if unavailable
+
+---
+
+## 🔗 Deep Linking
+
+The app supports deep links like:
+
+-----Test on Android using ADB:------
+
+adb shell am start -a android.intent.action.VIEW \
+  -c android.intent.category.BROWSABLE \
+  -d "https://productlist-asharudheen.web.app/product/5" \
+  -n com.example.product_list/.MainActivity
