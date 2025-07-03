@@ -17,7 +17,6 @@ import 'presentation/bloc/product/product_bloc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Add this line to remove # from URLs on web
   usePathUrlStrategy();
 
   final database = await openDatabase(
@@ -73,20 +72,18 @@ class MyApp extends StatelessWidget {
           },
         ),
       ],
-      // Add error handling
       errorBuilder: (context, state) => Scaffold(
         body: Center(
           child: Text('Page not found: ${state.error}'),
         ),
       ),
-      // Handle initial deep link
       initialLocation: '/',
     );
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: router,
-      title: 'Product List', // Add a title
+      title: 'Product List',
     );
   }
 }
