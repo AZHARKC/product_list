@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:product_list/data/models/product_model.dart';
 import 'package:product_list/data/repositories/product_repository.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final int? productId;
@@ -15,14 +15,14 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     if (productId == null) {
       return const Scaffold(
         body: Center(child: Text("Invalid product ID")),
       );
     }
+
     return FutureBuilder<List<ProductModel>>(
-      future: repository.getCachedProducts(), // Get all cached
+      future: repository.getCachedProducts(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -36,19 +36,37 @@ class ProductDetailPage extends StatelessWidget {
           );
         }
 
-        final product = snapshot.data!.firstWhere(
-              (p) => p.id == productId,
-          orElse: () => null as ProductModel,
-        );
+        // final ProductModel? product = snapshot.data!
+        //     .firstWhere((p) => p.id == productId, orElse: () => null);
+
+        final ProductModel? product = snapshot.data!
+            .cast<ProductModel?>()
+            .firstWhere((p) => p?.id == productId, orElse: () => null);
+
+
+
 
         if (product == null) {
           return const Scaffold(
-            body: Center(child: Text(" Product not found in local storage.")),
+            body: Center(child: Text("Product not found in local storage.")),
           );
         }
 
         return Scaffold(
-          appBar: AppBar(title: Text(product.title)),
+          appBar: AppBar(title: Text(product.title),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.share),
+                onPressed: () {
+                  final url = 'https://productlist-asharudheen.web.app/product/${product.id}';
+                  Share.share('Check out this product: $url');
+                },
+              ),
+
+
+
+            ],
+          ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -56,7 +74,7 @@ class ProductDetailPage extends StatelessWidget {
               children: [
                 Center(
                   child: Image.network(
-                    product.thumbnail?? '',
+                    product.thumbnail ?? '',
                     width: 200,
                     height: 200,
                     errorBuilder: (_, __, ___) =>
@@ -80,13 +98,5 @@ class ProductDetailPage extends StatelessWidget {
         );
       },
     );
-
   }
 }
-
-
-
-
-
-
-

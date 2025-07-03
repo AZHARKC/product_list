@@ -1,0 +1,17 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls","delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.example.product_list",
+      "sha256_cert_fingerprints": [
+        "3F08CEE0EFCC9BDA003187B47D11A5D35271515D806804F5CC1907F28ECCA185"
+      ]
+    }
+  }
+]
+
+
+

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_web_plugins/url_strategy.dart'; // Add this import
 import 'package:product_list/presentation/bloc/product/product_event.dart';
 import 'package:product_list/widgets/product_detail_page.dart';
 import 'package:product_list/widgets/product_list.dart';
@@ -16,6 +17,8 @@ import 'presentation/bloc/product/product_bloc.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Add this line to remove # from URLs on web
+  usePathUrlStrategy();
 
   final database = await openDatabase(
     join(await getDatabasesPath(), 'product_db.db'),
@@ -34,17 +37,13 @@ void main() async {
     brand TEXT,
     thumbnail TEXT,
     image TEXT
-
   )
 ''');
-      },
+    },
   );
 
-
-  final local = ProductLocalDataSourceImpl(database );
+  final local = ProductLocalDataSourceImpl(database);
   final remote = ProductRemoteDataSourceImpl(http.Client());
-
-
   final repo = ProductRepository(remote: remote, local: local);
 
   runApp(MyApp(repo: repo));
@@ -57,36 +56,37 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return MaterialApp(
-    //   home: BlocProvider(
-    //     create: (_) => ProductBloc(repo)..add(const ProductEvent.started()),
-    //     child: const ProductListPage(),
-    //   ),
-    // );
     final GoRouter router = GoRouter(
-        routes:[
-          GoRoute(
-            path: '/',
-            builder: (context, state) => BlocProvider(
-              create: (_) => ProductBloc(repo)..add(const ProductEvent.started()),
-              child: const ProductListPage(),
-            ),
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => BlocProvider(
+            create: (_) => ProductBloc(repo)..add(const ProductEvent.started()),
+            child: const ProductListPage(),
           ),
-          GoRoute(
-            path: '/product/:id',
-            builder: (context, state) {
-              final id = int.tryParse(state.pathParameters['id'] ?? '');
-              return ProductDetailPage(productId: id, repository: repo);
-            },
-          ),
-        ],
-
+        ),
+        GoRoute(
+          path: '/product/:id',
+          builder: (context, state) {
+            final id = int.tryParse(state.pathParameters['id'] ?? '');
+            return ProductDetailPage(productId: id, repository: repo);
+          },
+        ),
+      ],
+      // Add error handling
+      errorBuilder: (context, state) => Scaffold(
+        body: Center(
+          child: Text('Page not found: ${state.error}'),
+        ),
+      ),
+      // Handle initial deep link
+      initialLocation: '/',
     );
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: router,
+      title: 'Product List', // Add a title
     );
   }
 }
-
-

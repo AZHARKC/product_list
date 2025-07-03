@@ -11,3 +11,5 @@ sealed class ProductState with _$ProductState {
   const factory ProductState.noMoreData(List<ProductModel> products) = NoMoreData;
   const factory ProductState.error(String message) = Error;
 }
+
+

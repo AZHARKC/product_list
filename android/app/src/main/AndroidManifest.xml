@@ -19,6 +19,10 @@
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="true"/>
+
 
             <!-- Default launcher intent -->
             <intent-filter>
@@ -26,15 +30,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <!-- Deep link intent filter - catch all myapp:// URLs -->
-            <intent-filter>
+            <!-- Deep link intent filter - -->
+            <intent-filter >
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="myapp"
-                    android:host="product" />
+                    android:scheme="https"
+                    android:host="productlist-asharudheen.web.app" />
             </intent-filter>
+
         </activity>
 
         <meta-data
