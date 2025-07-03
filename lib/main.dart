@@ -21,8 +21,6 @@ void main() async {
     join(await getDatabasesPath(), 'product_db.db'),
     version: 1,
     onCreate: (db, version) async {
-
-
       await db.execute('''
   CREATE TABLE products (
     id INTEGER PRIMARY KEY,
